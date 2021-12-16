@@ -1,0 +1,64 @@
+
+bot.on('callback_query', (ctx) => {
+    // Explicit usage
+    ctx.telegram.answerCbQuery(ctx.callbackQuery.id)
+  
+    // Using context shortcut
+    ctx.answerCbQuery()
+  })
+  
+  bot.on('inline_query', (ctx) => {
+    const result = []
+    // Explicit usage
+    ctx.telegram.answerInlineQuery(ctx.inlineQuery.id, result)
+  
+    // Using context shortcut
+    ctx.answerInlineQuery(result)
+  })
+  // bot.start((ctx) => ctx.reply("Welcome"));
+  bot.command("help", (ctx) => ctx.reply("Help"));
+  bot.command("about", Telegraf.reply("About"));
+  
+  bot.command("start", (ctx) => {
+      console.log(ctx.from);
+      bot.telegram.sendMessage(
+          ctx.chat.id,
+          "hello there! Welcome to my new telegram bot.",
+          {}
+      );
+  });
+  
+  bot.hears("animals", (ctx) => {
+      console.log(ctx.from);
+      let animalMessage = `great, here are pictures of animals you would love`;
+      ctx.deleteMessage();
+      bot.telegram.sendMessage(ctx.chat.id, animalMessage, {
+          reply_markup: {
+              inline_keyboard: [
+                  [
+                      {
+                          text: "dog",
+                          callback_data: "dog",
+                      },
+                      {
+                          text: "cat",
+                          callback_data: "cat",
+                      },
+                  ],
+              ],
+          },
+      });
+  });
+  
+  bot.action("dog", (ctx) => {
+      bot.telegram.sendPhoto(ctx.chat.id, {
+          source: "https://www.adoptandshop.org/wp-content/uploads/2020/01/joe-caione-781415-unsplash.jpg",
+      });
+  });
+  
+  bot.action("cat", (ctx) => {
+      bot.telegram.sendPhoto(ctx.chat.id, {
+          source: "http://images4.fanpop.com/image/photos/18500000/Cats-random-18597257-400-434.jpg",
+      });
+  });
+  
